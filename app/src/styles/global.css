@@ -52,7 +52,7 @@
   --ink: #17161a;
   --ink-soft: #423d38;
   --ink-muted: #635c51;
-  --ink-faint: #8a8175;
+  --ink-faint: #726a5e;
 
   --line: rgba(23, 22, 26, 0.13);
   --line-strong: rgba(23, 22, 26, 0.26);
@@ -93,7 +93,7 @@
   --ink: #f2ede3;
   --ink-soft: #ddd5c8;
   --ink-muted: #b3a999;
-  --ink-faint: #8a8071;
+  --ink-faint: #9c9281;
 
   --line: rgba(242, 237, 227, 0.11);
   --line-strong: rgba(242, 237, 227, 0.26);
