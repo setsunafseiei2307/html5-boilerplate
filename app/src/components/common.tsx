@@ -9,19 +9,25 @@ import {
   IconSearch,
   IconX
 } from './icons';
+import { MizuhikiKnot } from './Mizuhiki';
 import {
   buildLineShareUrl,
   buildXShareUrl,
   copyText
 } from '../lib/share';
 
-/** 水引を模した区切り線。 */
+/** 水引を模した区切り線。中央に結び目を置く。 */
 export function MizuhikiRule() {
   return (
-    <svg className="mizuhiki-rule" viewBox="0 0 400 26" preserveAspectRatio="none" aria-hidden>
-      <path className="mizuhiki-rule__a" d="M4 17C104 5 296 5 396 17" />
-      <path className="mizuhiki-rule__b" d="M4 22C104 10 296 10 396 22" />
-    </svg>
+    <div className="rule">
+      <svg className="mizuhiki-rule" viewBox="0 0 400 26" preserveAspectRatio="none" aria-hidden>
+        <path className="mizuhiki-rule__a" d="M4 17C104 5 296 5 396 17" />
+        <path className="mizuhiki-rule__b" d="M4 22C104 10 296 10 396 22" />
+      </svg>
+      <span className="rule__knot" aria-hidden>
+        <MizuhikiKnot size={54} />
+      </span>
+    </div>
   );
 }
 

@@ -1,0 +1,12 @@
+このディレクトリの woff2 ファイルは、以下のフォントを本アプリで使用する文字だけに
+サブセットしたものです。いずれも SIL Open Font License 1.1 で配布されています。
+
+- Shippori Mincho B1 (c) 2020 The Shippori Mincho Project Authors
+  https://github.com/fontdasu/ShipporiMincho
+- Zen Kaku Gothic New (c) 2021 The Zen Kaku Gothic Project Authors
+  https://github.com/yuru7/zen-kaku-gothic
+
+SIL Open Font License 1.1 の全文:
+https://openfontlicense.org/
+
+OFL の条件により、サブセット化した派生物も同じライセンスで配布されます。

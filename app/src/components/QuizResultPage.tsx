@@ -82,6 +82,11 @@ export default function QuizResultPage({ token, onCopied }: QuizResultPageProps)
   return (
     <div className="quiz">
       <section className="score rise rise--1">
+        <span className="score__seal" aria-hidden>
+          つつみ
+          <br />
+          帖
+        </span>
         <div className="score__ring">
           <svg viewBox="0 0 190 190" aria-hidden>
             <defs>
@@ -141,7 +146,7 @@ export default function QuizResultPage({ token, onCopied }: QuizResultPageProps)
         url={url}
         onCopied={onCopied}
         onDownload={handleDownload}
-        downloadLabel="結果画像を保存"
+        downloadLabel="画像を保存"
       />
 
       <section className="review">

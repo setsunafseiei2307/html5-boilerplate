@@ -14,7 +14,9 @@ import {
   IconKnot,
   OccasionIcon
 } from './icons';
+import { useCountUp } from '../lib/useCountUp';
 import { OfferList, ShareBar } from './common';
+import { MizuhikiArc } from './Mizuhiki';
 
 export interface ResultPageProps {
   input: GiftInput;
@@ -24,6 +26,7 @@ export interface ResultPageProps {
 export default function ResultPage({ input, onCopied }: ResultPageProps) {
   const result = useMemo(() => buildResult(input), [input]);
   const { occasion, relation, range, envelope } = result;
+  const displayedAmount = useCountUp(range.typical);
 
   useEffect(() => {
     pushHistory(input, range.typical);
@@ -56,21 +59,13 @@ export default function ResultPage({ input, onCopied }: ResultPageProps) {
   return (
     <div className="result" data-ceremony={result.ceremony}>
       <section className="result-hero rise rise--1">
-        <svg
-          className="result-hero__mizuhiki"
-          viewBox="0 0 400 44"
-          preserveAspectRatio="none"
-          aria-hidden
-        >
-          <path d="M6 30C106 8 294 8 394 30" />
-          <path d="M6 38C106 16 294 16 394 38" />
-        </svg>
+        <MizuhikiArc className="result-hero__mizuhiki" />
 
         <p className="result-hero__scene">
           {occasion.label} ／ {relation.label}
         </p>
         <p className="result-hero__amount">
-          {range.typical.toLocaleString('ja-JP')}
+          {displayedAmount.toLocaleString('ja-JP')}
           <small>円</small>
         </p>
         <p className="result-hero__kanji">
@@ -192,7 +187,7 @@ export default function ResultPage({ input, onCopied }: ResultPageProps) {
         url={url}
         onCopied={onCopied}
         onDownload={handleDownload}
-        downloadLabel="カード画像を保存"
+        downloadLabel="画像を保存"
       />
 
       <OfferList heading="この場面で役に立つもの" offers={offersFor(occasion.id)} />

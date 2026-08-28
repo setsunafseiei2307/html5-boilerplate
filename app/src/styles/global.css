@@ -1,4 +1,44 @@
 /* ============================================================
+   書体
+   Google Fonts の CDN には頼らず、この画面で実際に使う文字だけに
+   サブセットした woff2 を同梱する。第三者へのリクエストが発生せず、
+   回線が細い環境でも本文が明朝のまま表示される。
+   Shippori Mincho B1 / Zen Kaku Gothic New はいずれも SIL Open Font License 1.1。
+   ============================================================ */
+
+@font-face {
+  font-family: 'Shippori Mincho B1 Subset';
+  src: url('/fonts/shippori-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Shippori Mincho B1 Subset';
+  src: url('/fonts/shippori-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Zen Kaku Gothic New Subset';
+  src: url('/fonts/zenkaku-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Zen Kaku Gothic New Subset';
+  src: url('/fonts/zenkaku-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================================
    つつみ帖 — デザイントークン
    和紙の生成り、墨、慶事の朱、弔事の藍、水引の金。色数は5系統に絞る。
    ============================================================ */
@@ -35,26 +75,28 @@
   --radius: 10px;
   --radius-lg: 16px;
 
-  --serif: 'Shippori Mincho B1', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
-  --sans: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Yu Gothic', system-ui, sans-serif;
+  --serif: 'Shippori Mincho B1 Subset', 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP',
+    serif;
+  --sans: 'Zen Kaku Gothic New Subset', 'Hiragino Sans', 'Yu Gothic', 'Noto Sans JP',
+    system-ui, sans-serif;
 
   --ease: cubic-bezier(0.32, 0.72, 0.28, 1);
   --page-max: 940px;
 }
 
 :root[data-theme='dark'] {
-  --paper: #141311;
-  --paper-deep: #0e0d0c;
-  --surface: #1e1c19;
-  --surface-sunk: #171614;
+  --paper: #121110;
+  --paper-deep: #0c0b0a;
+  --surface: #23211d;
+  --surface-sunk: #1a1917;
 
   --ink: #f2ede3;
   --ink-soft: #ddd5c8;
   --ink-muted: #b3a999;
   --ink-faint: #8a8071;
 
-  --line: rgba(242, 237, 227, 0.14);
-  --line-strong: rgba(242, 237, 227, 0.3);
+  --line: rgba(242, 237, 227, 0.11);
+  --line-strong: rgba(242, 237, 227, 0.26);
 
   --crimson: #e08a8f;
   --crimson-soft: rgba(224, 138, 143, 0.13);
@@ -111,9 +153,8 @@ body {
 
 :root[data-theme='dark'] body {
   background-image:
-    radial-gradient(circle at 12% 8%, rgba(255, 255, 255, 0.05), transparent 42%),
-    radial-gradient(circle at 88% 4%, rgba(214, 184, 120, 0.07), transparent 38%),
-    radial-gradient(circle at 50% 100%, rgba(224, 138, 143, 0.05), transparent 55%);
+    radial-gradient(circle at 12% 6%, rgba(255, 248, 232, 0.045), transparent 44%),
+    radial-gradient(circle at 88% 2%, rgba(214, 184, 120, 0.05), transparent 36%);
 }
 
 h1,
@@ -235,7 +276,8 @@ a {
 }
 
 :root[data-theme='dark'] .brand__seal {
-  color: #241214;
+  background: #a8353c;
+  color: #fbeee6;
 }
 
 .brand__name {
@@ -295,12 +337,31 @@ a {
 
 @media (max-width: 520px) {
   .navlink {
-    padding: 7px 8px;
-    font-size: 13px;
+    padding: 7px 7px;
+    font-size: 12.5px;
   }
   .brand__name {
-    font-size: 18px;
-    letter-spacing: 0.1em;
+    font-size: 17px;
+    letter-spacing: 0.08em;
+  }
+  .header__inner {
+    gap: 8px;
+  }
+  .theme-toggle {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-width: 380px) {
+  .navlink {
+    padding: 7px 5px;
+    font-size: 12px;
+  }
+  .brand__seal {
+    width: 27px;
+    height: 27px;
+    font-size: 15px;
   }
 }
 
@@ -343,6 +404,7 @@ a {
   color: var(--ink-muted);
   font-size: 15px;
   line-height: 1.9;
+  max-width: 38em;
 }
 
 /* 縦書きの小さな添え書き。和の余韻を出すための装飾 */
@@ -430,6 +492,22 @@ a {
 }
 
 /* 水引の区切り線 */
+.rule {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.rule__knot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -46%);
+  background: var(--paper);
+  padding: 0 12px;
+  line-height: 0;
+}
+
 .mizuhiki-rule {
   display: block;
   width: 100%;
@@ -500,19 +578,23 @@ a {
 
 .hero {
   position: relative;
-  padding: 40px 0 34px;
+  padding: 44px 0 38px;
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 28px;
-  align-items: start;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 40px;
+  align-items: center;
+}
+
+.hero__copy {
+  min-width: 0;
 }
 
 .hero__title {
-  font-size: clamp(30px, 7.4vw, 52px);
-  font-weight: 800;
-  line-height: 1.32;
-  letter-spacing: 0.02em;
-  margin-bottom: 18px;
+  font-size: clamp(30px, 6.6vw, 50px);
+  font-weight: 700;
+  line-height: 1.34;
+  letter-spacing: 0.01em;
+  margin: 10px 0 16px;
 }
 
 .hero__title em {
@@ -522,15 +604,15 @@ a {
   white-space: nowrap;
 }
 
-/* 見出しの強調語に朱の下線を引く */
+/* 見出しの強調語に水引の下線を引く */
 .hero__title em::after {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0.06em;
-  height: 3px;
-  background: var(--accent);
+  bottom: -0.06em;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--gold-line));
   border-radius: 2px;
   transform-origin: left;
   animation: underline 0.7s var(--ease) 0.3s both;
@@ -546,26 +628,171 @@ a {
 }
 
 .hero__lead {
-  max-width: 34em;
+  max-width: 28em;
   color: var(--ink-muted);
-  font-size: clamp(14px, 2.6vw, 16px);
+  font-size: clamp(14px, 2.5vw, 15.5px);
   line-height: 2;
 }
 
-.hero__side {
+.hero__actions {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-top: 8px;
+  gap: 10px;
+  margin-top: 24px;
+  flex-wrap: wrap;
 }
 
-@media (max-width: 700px) {
+.hero__preview {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.hero__tategaki {
+  align-self: center;
+  opacity: 0.8;
+}
+
+/* ホームで先に見せる結果カードの縮小版 */
+.preview-card {
+  position: relative;
+  flex: 1;
+  max-width: 340px;
+  padding: 26px 22px 20px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  transform: rotate(-1.1deg);
+  transition: transform 0.4s var(--ease);
+  animation: rise 0.6s var(--ease) 0.12s both;
+}
+
+.preview-card:hover {
+  transform: rotate(0deg) translateY(-3px);
+}
+
+.preview-card__tag {
+  position: absolute;
+  top: -10px;
+  left: 18px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.preview-card__arc {
+  display: block;
+  width: 100%;
+  height: 30px;
+  margin-bottom: 4px;
+}
+
+.preview-card__arc path {
+  fill: none;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.preview-card__arc path:nth-child(1) {
+  stroke: var(--accent);
+}
+
+.preview-card__arc path:nth-child(2) {
+  stroke: var(--gold-line);
+}
+
+.preview-card__scene {
+  font-family: var(--serif);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: var(--ink-faint);
+}
+
+.preview-card__amount {
+  font-family: var(--serif);
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 2px 0 1px;
+}
+
+.preview-card__amount small {
+  font-size: 0.44em;
+  margin-left: 2px;
+}
+
+.preview-card__kanji {
+  font-family: var(--serif);
+  font-size: 12px;
+  color: var(--ink-muted);
+  letter-spacing: 0.08em;
+}
+
+.preview-card__facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line-strong);
+}
+
+.preview-card__facts span {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 10.5px;
+  color: var(--ink-faint);
+  letter-spacing: 0.06em;
+}
+
+.preview-card__facts b {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+.preview-card__warn {
+  margin-top: 12px;
+  font-size: 11.5px;
+  color: var(--crimson);
+  line-height: 1.6;
+}
+
+.preview-card__warn s {
+  font-family: var(--serif);
+  font-weight: 700;
+  text-decoration-thickness: 1.5px;
+}
+
+@media (max-width: 860px) {
   .hero {
     grid-template-columns: 1fr;
-    padding: 26px 0 24px;
+    gap: 30px;
+    padding: 28px 0 26px;
   }
-  .hero__side {
+  .hero__preview {
+    justify-content: center;
+  }
+  .hero__tategaki {
     display: none;
+  }
+  .preview-card {
+    max-width: 320px;
+    transform: none;
+  }
+  .hero__lead {
+    max-width: none;
   }
 }
 
@@ -659,11 +886,16 @@ a {
 
 .entry__figure {
   position: absolute;
-  right: -10px;
-  bottom: -14px;
-  opacity: 0.09;
+  right: -18px;
+  bottom: -10px;
+  opacity: 0.16;
   pointer-events: none;
-  color: var(--ink);
+  transition: opacity 0.28s var(--ease), transform 0.32s var(--ease);
+}
+
+.entry:hover .entry__figure {
+  opacity: 0.3;
+  transform: translate(-4px, -3px);
 }
 
 /* ホームの場面ショートカット */
@@ -877,8 +1109,15 @@ a {
 
 .option-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
   gap: 10px;
+  align-items: stretch;
+}
+
+@media (max-width: 420px) {
+  .option-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .option-grid--tight {
@@ -889,6 +1128,7 @@ a {
   position: relative;
   display: flex;
   align-items: center;
+  height: 100%;
   gap: 11px;
   text-align: left;
   padding: 14px 14px;
@@ -924,19 +1164,23 @@ a {
 
 .option__body {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 }
 
 .option__title {
+  display: block;
   font-size: 15px;
   font-weight: 600;
   line-height: 1.5;
 }
 
 .option__sub {
+  display: block;
   font-size: 12px;
   color: var(--ink-faint);
-  line-height: 1.6;
-  margin-top: 1px;
+  line-height: 1.55;
 }
 
 .option__check {
@@ -994,17 +1238,22 @@ a {
 
 .toggle-row__text {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .toggle-row__title {
+  display: block;
   font-size: 15px;
   font-weight: 600;
 }
 
 .toggle-row__sub {
+  display: block;
   font-size: 12px;
   color: var(--ink-faint);
-  line-height: 1.6;
+  line-height: 1.55;
 }
 
 .switch {
@@ -1261,6 +1510,7 @@ a {
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-top: 16px;
+  align-items: stretch;
 }
 
 @media (max-width: 640px) {
@@ -1270,6 +1520,8 @@ a {
 }
 
 .detail {
+  display: flex;
+  flex-direction: column;
   padding: 18px 18px 17px;
   border-radius: var(--radius);
   border: 1px solid var(--line);
@@ -1313,7 +1565,7 @@ a {
 }
 
 .alt-list {
-  margin-top: 12px;
+  margin-top: auto;
   padding-top: 12px;
   border-top: 1px dashed var(--line-strong);
   display: flex;
@@ -1494,6 +1746,12 @@ a {
   grid-template-columns: repeat(4, 1fr);
 }
 
+@media (max-width: 760px) {
+  .sharebtn {
+    font-size: 12.5px;
+  }
+}
+
 @media (max-width: 560px) {
   .share__row--wide {
     grid-template-columns: repeat(2, 1fr);
@@ -1506,7 +1764,8 @@ a {
   justify-content: center;
   gap: 7px;
   min-height: 46px;
-  padding: 0 12px;
+  padding: 0 10px;
+  white-space: nowrap;
   border-radius: var(--radius);
   border: 1px solid var(--line-strong);
   font-size: 13.5px;
@@ -1867,18 +2126,79 @@ a {
 .score {
   position: relative;
   text-align: center;
-  padding: 30px 24px 34px;
+  padding: 34px 24px 34px;
   border-radius: var(--radius-lg);
   border: 1px solid var(--line);
   background: var(--surface);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
 }
 
+/* 証書らしい二重罫 */
+.score::before {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  border: 1px solid color-mix(in srgb, var(--gold-line) 42%, transparent);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.score::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--accent), var(--gold-line), transparent);
+}
+
+/* 右上に朱の落款 */
+.score__seal {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  width: 46px;
+  height: 46px;
+  border-radius: 7px;
+  background: var(--crimson);
+  color: #fdf5ec;
+  display: grid;
+  place-items: center;
+  font-family: var(--serif);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+  transform: rotate(-7deg);
+  box-shadow: var(--shadow-sm);
+  animation: sealstamp 0.5s var(--ease) 0.65s both;
+}
+
+@keyframes sealstamp {
+  from {
+    opacity: 0;
+    transform: rotate(-7deg) scale(1.6);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-7deg) scale(1);
+  }
+}
+
+@media (max-width: 560px) {
+  .score__seal {
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    font-size: 11px;
+  }
+}
+
 .score__ring {
-  width: 190px;
-  height: 190px;
-  margin: 6px auto 0;
+  width: 206px;
+  height: 206px;
+  margin: 8px auto 0;
   position: relative;
 }
 
@@ -1890,7 +2210,7 @@ a {
 
 .score__ring circle {
   fill: none;
-  stroke-width: 8;
+  stroke-width: 13;
   stroke-linecap: round;
 }
 
@@ -1898,9 +2218,13 @@ a {
   stroke: var(--surface-sunk);
 }
 
+:root[data-theme='dark'] .score__ring-bg {
+  stroke: rgba(242, 237, 227, 0.08);
+}
+
 .score__ring-fg {
   stroke: url(#scoreGradient);
-  transition: stroke-dashoffset 1s var(--ease);
+  transition: stroke-dashoffset 1.2s var(--ease);
 }
 
 .score__center {
@@ -1920,10 +2244,11 @@ a {
 
 .score__value {
   font-family: var(--serif);
-  font-size: 62px;
-  font-weight: 800;
+  font-size: 68px;
+  font-weight: 700;
   line-height: 1;
-  margin: 4px 0 2px;
+  margin: 6px 0 3px;
+  font-variant-numeric: tabular-nums;
 }
 
 .score__of {
@@ -1933,24 +2258,26 @@ a {
 
 .score__title {
   font-family: var(--serif);
-  font-size: clamp(24px, 6vw, 34px);
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  margin-top: 18px;
+  font-size: clamp(26px, 6.4vw, 38px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-top: 20px;
 }
 
 .score__title::before,
 .score__title::after {
-  content: '——';
-  color: var(--accent);
-  font-weight: 400;
-  margin: 0 10px;
-  letter-spacing: -0.1em;
-  opacity: 0.6;
+  content: '';
+  display: inline-block;
+  width: clamp(18px, 5vw, 36px);
+  height: 1px;
+  vertical-align: 0.32em;
+  margin: 0 14px;
+  background: var(--accent);
+  opacity: 0.7;
 }
 
 .score__desc {
-  max-width: 30em;
+  max-width: 28em;
   margin: 12px auto 0;
   font-size: 14px;
   line-height: 1.95;
@@ -1960,20 +2287,25 @@ a {
 .score__meta {
   display: flex;
   justify-content: center;
-  gap: 22px;
-  margin-top: 20px;
+  gap: 0;
+  margin-top: 22px;
   flex-wrap: wrap;
 }
 
 .score__stat {
   text-align: center;
+  padding: 0 20px;
+}
+
+.score__stat + .score__stat {
+  border-left: 1px solid var(--line);
 }
 
 .score__stat-value {
   font-family: var(--serif);
-  font-size: 24px;
+  font-size: 25px;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .score__stat-label {
@@ -2016,8 +2348,9 @@ a {
 }
 
 .review__mark--ok {
-  background: rgba(47, 125, 79, 0.14);
-  color: #2f7d4f;
+  background: rgba(30, 106, 62, 0.16);
+  color: #1e6a3e;
+  font-weight: 800;
 }
 
 :root[data-theme='dark'] .review__mark--ok {
@@ -2026,8 +2359,9 @@ a {
 }
 
 .review__mark--ng {
-  background: var(--crimson-soft);
+  background: color-mix(in srgb, var(--crimson) 16%, transparent);
   color: var(--crimson);
+  font-weight: 800;
 }
 
 .review__q {
@@ -2284,8 +2618,8 @@ table.matrix tbody tr:hover td {
 .empty {
   display: grid;
   place-items: center;
-  gap: 14px;
-  padding: 54px 24px;
+  gap: 10px;
+  padding: 30px 24px;
   text-align: center;
   border: 1px dashed var(--line-strong);
   border-radius: var(--radius-lg);
