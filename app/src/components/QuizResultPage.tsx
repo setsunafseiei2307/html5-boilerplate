@@ -83,10 +83,9 @@ export default function QuizResultPage({ token, onCopied }: QuizResultPageProps)
     <div className="quiz">
       <section className="score rise rise--1">
         <span className="score__seal" aria-hidden>
-          つつみ
-          <br />
           帖
         </span>
+        <p className="score__kicker">マナー偏差値テスト ／ 全10問</p>
         <div className="score__ring">
           <svg viewBox="0 0 190 190" aria-hidden>
             <defs>

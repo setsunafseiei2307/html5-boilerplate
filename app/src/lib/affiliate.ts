@@ -224,7 +224,10 @@ export const QUIZ_OFFERS: AffiliateOffer[] = [
 ];
 
 export function offersFor(occasion: OccasionId): AffiliateOffer[] {
-  return OFFERS_BY_OCCASION[occasion] ?? [];
+  // 場面の識別子は URL 由来のこともあるため、実在するキーだけを引く
+  if (!Object.prototype.hasOwnProperty.call(OFFERS_BY_OCCASION, occasion)) return [];
+  const offers = OFFERS_BY_OCCASION[occasion];
+  return Array.isArray(offers) ? offers : [];
 }
 
 /** 差し替え前のダミーかどうか。 */

@@ -190,6 +190,15 @@ a {
   border-radius: 4px;
 }
 
+/*
+  画面が切り替わったときに読み上げの起点を移すためだけの focus。
+  操作対象ではないので枠は出さない。
+*/
+[tabindex='-1']:focus,
+[tabindex='-1']:focus-visible {
+  outline: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -220,6 +229,22 @@ a {
 .main {
   flex: 1;
   padding: 28px 0 72px;
+}
+
+/* 画面が変わったことが分かる程度の、ごく短い立ち上がり */
+.view {
+  animation: viewin 0.34s var(--ease) both;
+}
+
+@keyframes viewin {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @media (max-width: 600px) {
@@ -409,7 +434,9 @@ a {
 
 /* 縦書きの小さな添え書き。和の余韻を出すための装飾 */
 .tategaki {
+  display: inline-block;
   writing-mode: vertical-rl;
+  white-space: nowrap;
   font-family: var(--serif);
   letter-spacing: 0.34em;
   font-size: 12px;
@@ -422,6 +449,8 @@ a {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  text-decoration: none;
+  white-space: nowrap;
   min-height: 48px;
   padding: 0 22px;
   border-radius: 999px;
@@ -502,10 +531,11 @@ a {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -46%);
+  transform: translate(-50%, -42%);
   background: var(--paper);
-  padding: 0 12px;
+  padding: 0 16px;
   line-height: 0;
+  opacity: 0.9;
 }
 
 .mizuhiki-rule {
@@ -652,7 +682,10 @@ a {
 
 .hero__tategaki {
   align-self: center;
-  opacity: 0.8;
+  opacity: 0.75;
+  flex: 0 0 auto;
+  order: -1;
+  white-space: nowrap;
 }
 
 /* ホームで先に見せる結果カードの縮小版 */
@@ -847,9 +880,14 @@ a {
   transform: scaleX(1);
 }
 
-.entry--condolence {
-  --accent: var(--indigo);
-  --accent-soft: var(--indigo-soft);
+.entry--gold {
+  --accent: var(--gold);
+  --accent-soft: rgba(168, 135, 60, 0.11);
+}
+
+:root[data-theme='dark'] .entry--gold {
+  --accent: var(--gold);
+  --accent-soft: rgba(214, 184, 120, 0.13);
 }
 
 .entry__label {
@@ -948,6 +986,13 @@ a {
   margin-top: 40px;
 }
 
+.history__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .history__list {
   display: flex;
   flex-direction: column;
@@ -1026,8 +1071,9 @@ a {
 }
 
 .step__dot {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -1039,6 +1085,19 @@ a {
   flex-shrink: 0;
   transition: background 0.24s var(--ease), color 0.24s var(--ease),
     border-color 0.24s var(--ease);
+}
+
+.step__dot:not([disabled]) {
+  cursor: pointer;
+}
+
+.step__dot:not([disabled]):hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.step__dot[disabled] {
+  cursor: default;
 }
 
 .step--active .step__dot {
@@ -1150,6 +1209,19 @@ a {
   border-color: var(--accent);
   background: var(--accent-soft);
   box-shadow: inset 0 0 0 1px var(--accent);
+  animation: picked 0.34s var(--ease);
+}
+
+@keyframes picked {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.975);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .option__icon {
@@ -1198,7 +1270,9 @@ a {
 }
 
 .segment {
-  display: inline-flex;
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
   padding: 3px;
   gap: 3px;
   border-radius: 999px;
@@ -1222,6 +1296,24 @@ a {
   color: var(--ink);
   font-weight: 700;
   box-shadow: var(--shadow-sm);
+}
+
+/* 折り返すと丸い帯が崩れて見えるため、狭い画面では格子に切り替える */
+@media (max-width: 720px) {
+  .segment {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+    width: 100%;
+    border-radius: var(--radius);
+    padding: 4px;
+    gap: 4px;
+  }
+
+  .segment__item {
+    border-radius: var(--radius-sm);
+    padding: 9px 8px;
+    text-align: center;
+  }
 }
 
 .toggle-row {
@@ -1389,6 +1481,15 @@ a {
   text-align: center;
 }
 
+.result-hero::before {
+  content: '';
+  position: absolute;
+  inset: 9px;
+  border: 1px solid color-mix(in srgb, var(--gold-line) 38%, transparent);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
 .result-hero::after {
   content: '';
   position: absolute;
@@ -1397,10 +1498,49 @@ a {
   background: linear-gradient(90deg, transparent, var(--accent), var(--gold-line), transparent);
 }
 
+.result-hero__seal {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fdf5ec;
+  display: grid;
+  place-items: center;
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1;
+  padding-top: 2px;
+  transform: rotate(-7deg);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24), var(--shadow-sm);
+  animation: sealstamp 0.5s var(--ease) 0.7s both;
+}
+
+@media (max-width: 560px) {
+  .result-hero__seal {
+    top: 15px;
+    right: 15px;
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
+  }
+}
+
 .result-hero__mizuhiki {
-  width: 100%;
+  display: block;
+  /* 右上の落款と重ならないよう、両端を空ける */
+  width: calc(100% - 104px);
+  margin: 0 auto 6px;
   height: 44px;
-  margin-bottom: 6px;
+}
+
+@media (max-width: 560px) {
+  .result-hero__mizuhiki {
+    width: calc(100% - 84px);
+  }
 }
 
 .result-hero__mizuhiki path {
@@ -1507,14 +1647,28 @@ a {
 /* 作法カード */
 .detail-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   margin-top: 16px;
   align-items: stretch;
 }
 
-@media (max-width: 640px) {
+/* 表書きは代替候補を抱えるので一列使う */
+.detail--wide {
+  grid-column: 1 / -1;
+}
+
+.detail--wide .alt-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px 20px;
+}
+
+@media (max-width: 760px) {
   .detail-grid {
+    grid-template-columns: 1fr;
+  }
+  .detail--wide .alt-list {
     grid-template-columns: 1fr;
   }
 }
@@ -1575,9 +1729,10 @@ a {
 
 .alt-list__row {
   display: flex;
-  gap: 9px;
+  flex-direction: column;
+  gap: 2px;
   font-size: 12.5px;
-  line-height: 1.7;
+  line-height: 1.75;
   color: var(--ink-muted);
 }
 
@@ -2165,11 +2320,13 @@ a {
   display: grid;
   place-items: center;
   font-family: var(--serif);
-  font-size: 12px;
+  font-size: 24px;
   font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: 0.04em;
+  line-height: 1;
+  padding-top: 2px;
+  letter-spacing: 0;
   transform: rotate(-7deg);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24), var(--shadow-sm);
   box-shadow: var(--shadow-sm);
   animation: sealstamp 0.5s var(--ease) 0.65s both;
 }
@@ -2193,6 +2350,14 @@ a {
     height: 40px;
     font-size: 11px;
   }
+}
+
+.score__kicker {
+  font-family: var(--serif);
+  font-size: 11.5px;
+  letter-spacing: 0.22em;
+  color: var(--ink-faint);
+  margin-bottom: 2px;
 }
 
 .score__ring {
@@ -2490,6 +2655,23 @@ table.matrix tbody tr:hover td {
    フッター
    ============================================================ */
 
+.closing {
+  margin-top: 34px;
+  padding: 26px 26px 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  background: var(--surface-sunk);
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+  text-align: center;
+}
+
+.closing .lead {
+  font-size: 14px;
+  max-width: 34em;
+}
+
 .footer {
   border-top: 1px solid var(--line);
   padding: 30px 0 40px;
@@ -2618,8 +2800,10 @@ table.matrix tbody tr:hover td {
 .empty {
   display: grid;
   place-items: center;
-  gap: 10px;
-  padding: 30px 24px;
+  gap: 8px;
+  padding: 22px 24px;
+  margin: 0 auto;
+  max-width: 480px;
   text-align: center;
   border: 1px dashed var(--line-strong);
   border-radius: var(--radius-lg);
@@ -2628,21 +2812,21 @@ table.matrix tbody tr:hover td {
 
 .empty__icon {
   color: var(--ink-faint);
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .empty__title {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.06em;
 }
 
 .empty__text {
-  font-size: 13.5px;
+  font-size: 13px;
   color: var(--ink-muted);
-  line-height: 1.85;
-  max-width: 28em;
+  line-height: 1.8;
+  max-width: 26em;
 }
 
 .sr-only {

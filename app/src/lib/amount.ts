@@ -1,4 +1,11 @@
-import { AGE_BANDS, OCCASION_MAP, REGION_MAP, RELATION_MAP } from './occasions';
+import {
+  AGE_BANDS,
+  REGION_MAP,
+  baseAmountFor,
+  findOccasion,
+  findRelation,
+  has
+} from './occasions';
 import type {
   AgeBandId,
   AmountRange,
@@ -93,6 +100,7 @@ export function ageMultiplier(age: AgeBandId): number {
 }
 
 export function regionMultiplier(region: RegionId): number {
+  if (!has(REGION_MAP, region)) return 1;
   return REGION_MAP[region]?.multiplier ?? 1;
 }
 
@@ -119,9 +127,9 @@ export function attendanceMultiplier(
 
 /** 生の推奨額（丸める前）を返す。テストしやすいよう独立させている。 */
 export function rawAmount(input: GiftInput): number {
-  const occasion = OCCASION_MAP[input.occasion];
+  const occasion = findOccasion(input.occasion);
   if (!occasion) return 0;
-  const base = occasion.base[input.relation];
+  const base = baseAmountFor(occasion, input.relation);
   if (base === undefined) return 0;
 
   let amount = base;
@@ -137,7 +145,7 @@ export function rawAmount(input: GiftInput): number {
 
 /** 推奨額と、その上下1段階を含むレンジを返す。 */
 export function calcRange(input: GiftInput): AmountRange {
-  const occasion = OCCASION_MAP[input.occasion];
+  const occasion = findOccasion(input.occasion);
   const ceremony: Ceremony = occasion?.ceremony ?? 'celebration';
   const raw = rawAmount(input);
   if (raw <= 0) {
@@ -173,21 +181,24 @@ export function nearbyTaboos(range: AmountRange, ceremony: Ceremony): Taboo[] {
 }
 
 /** 入力が成立するか（その場面にその関係性の基準額があるか）。 */
-export function isValidInput(input: Partial<GiftInput>): input is GiftInput {
+export function isValidInput(input: Partial<GiftInput> | null | undefined): input is GiftInput {
+  if (!input || typeof input !== 'object') return false;
   if (!input.occasion || !input.relation || !input.age || !input.region) return false;
-  const occasion = OCCASION_MAP[input.occasion];
+  const occasion = findOccasion(input.occasion);
   if (!occasion) return false;
-  return occasion.base[input.relation] !== undefined;
+  if (!AGE_BANDS.some((b) => b.id === input.age)) return false;
+  if (!has(REGION_MAP, input.region)) return false;
+  return baseAmountFor(occasion, input.relation) !== undefined;
 }
 
 /** 画面に出すすべての情報を組み立てる。 */
 export function buildResult(input: GiftInput): GiftResult {
-  const occasion = OCCASION_MAP[input.occasion];
-  const relation = RELATION_MAP[input.relation];
+  const occasion = findOccasion(input.occasion)!;
+  const relation = findRelation(input.relation)!;
   const range = calcRange(input);
   const notes: string[] = [];
 
-  const regionNote = REGION_MAP[input.region]?.note;
+  const regionNote = has(REGION_MAP, input.region) ? REGION_MAP[input.region]?.note : undefined;
   if (regionNote) notes.push(regionNote);
 
   if (occasion.asksAttendance && input.attendance === 'absent_before') {

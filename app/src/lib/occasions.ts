@@ -24,13 +24,25 @@ export const RELATIONS: Relation[] = [
   { id: 'client', label: '取引先', hint: '仕事上のおつきあい' }
 ];
 
-export const RELATION_MAP: Record<RelationId, Relation> = RELATIONS.reduce(
-  (acc, r) => {
-    acc[r.id] = r;
-    return acc;
-  },
-  {} as Record<RelationId, Relation>
-);
+/**
+ * 値は URL のクエリからも来るため、'__proto__' や 'constructor' のような
+ * キーで Object.prototype の中身を引かないよう、原型のないオブジェクトで持つ。
+ */
+function indexById<T extends { id: string }>(items: T[]): Record<string, T> {
+  const map = Object.create(null) as Record<string, T>;
+  for (const item of items) map[item.id] = item;
+  return map;
+}
+
+/** 原型を持たないオブジェクトに、そのキーが実在するか。 */
+export function has(record: object | undefined | null, key: string): boolean {
+  if (!record) return false;
+  return Object.prototype.hasOwnProperty.call(record, key);
+}
+
+export const RELATION_MAP: Record<RelationId, Relation> = indexById(
+  RELATIONS
+) as Record<RelationId, Relation>;
 
 export const AGE_BANDS: AgeBand[] = [
   { id: '20s', label: '20代', multiplier: 0.72 },
@@ -65,13 +77,7 @@ export const REGIONS: Region[] = [
   }
 ];
 
-export const REGION_MAP: Record<string, Region> = REGIONS.reduce(
-  (acc, r) => {
-    acc[r.id] = r;
-    return acc;
-  },
-  {} as Record<string, Region>
-);
+export const REGION_MAP: Record<string, Region> = indexById(REGIONS);
 
 export const OCCASIONS: Occasion[] = [
   {
@@ -336,17 +342,35 @@ export const OCCASIONS: Occasion[] = [
   }
 ];
 
-export const OCCASION_MAP: Record<OccasionId, Occasion> = OCCASIONS.reduce(
-  (acc, o) => {
-    acc[o.id] = o;
-    return acc;
-  },
-  {} as Record<OccasionId, Occasion>
-);
+export const OCCASION_MAP: Record<OccasionId, Occasion> = indexById(
+  OCCASIONS
+) as Record<OccasionId, Occasion>;
+
+/** 場面を安全に引く。未知のキーは undefined。 */
+export function findOccasion(id: string | undefined | null): Occasion | undefined {
+  if (!id || !has(OCCASION_MAP, id)) return undefined;
+  return OCCASION_MAP[id as OccasionId];
+}
+
+/** 関係性を安全に引く。未知のキーは undefined。 */
+export function findRelation(id: string | undefined | null): Relation | undefined {
+  if (!id || !has(RELATION_MAP, id)) return undefined;
+  return RELATION_MAP[id as RelationId];
+}
+
+/** その場面にその関係性の基準額があるか。 */
+export function baseAmountFor(
+  occasion: Occasion,
+  relationId: string
+): number | undefined {
+  if (!has(occasion.base, relationId)) return undefined;
+  const amount = occasion.base[relationId as RelationId];
+  return typeof amount === 'number' ? amount : undefined;
+}
 
 /** その場面で選べる関係性だけを、RELATIONS の並び順で返す。 */
 export function relationsFor(occasionId: OccasionId): Relation[] {
-  const occasion = OCCASION_MAP[occasionId];
+  const occasion = findOccasion(occasionId);
   if (!occasion) return [];
-  return RELATIONS.filter((r) => occasion.base[r.id] !== undefined);
+  return RELATIONS.filter((r) => baseAmountFor(occasion, r.id) !== undefined);
 }

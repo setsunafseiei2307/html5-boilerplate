@@ -59,6 +59,9 @@ export default function ResultPage({ input, onCopied }: ResultPageProps) {
   return (
     <div className="result" data-ceremony={result.ceremony}>
       <section className="result-hero rise rise--1">
+        <span className="result-hero__seal" aria-hidden>
+          帖
+        </span>
         <MizuhikiArc className="result-hero__mizuhiki" />
 
         <p className="result-hero__scene">
@@ -89,7 +92,7 @@ export default function ResultPage({ input, onCopied }: ResultPageProps) {
       </section>
 
       <div className="detail-grid rise rise--2">
-        <div className="detail">
+        <div className="detail detail--wide">
           <p className="detail__label">
             <IconBrush size={15} /> 表書き
           </p>

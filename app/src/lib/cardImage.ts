@@ -15,6 +15,8 @@ export interface CardImageSpec {
   footnote: string;
   /** 慶事は朱、弔事は藍でアクセントを変える */
   accent: 'crimson' | 'indigo';
+  /** 下部の署名。空文字を渡すと出さない */
+  signature?: string;
 }
 
 const WIDTH = 1200;
@@ -52,14 +54,14 @@ function drawMizuhiki(ctx: CanvasRenderingContext2D, accentColor: string): void 
 
   ctx.strokeStyle = accentColor;
   ctx.beginPath();
-  ctx.moveTo(90, 250);
-  ctx.bezierCurveTo(360, 150, 840, 150, 1110, 250);
+  ctx.moveTo(90, 176);
+  ctx.bezierCurveTo(360, 84, 840, 84, 1110, 176);
   ctx.stroke();
 
   ctx.strokeStyle = GOLD;
   ctx.beginPath();
-  ctx.moveTo(90, 272);
-  ctx.bezierCurveTo(360, 172, 840, 172, 1110, 272);
+  ctx.moveTo(90, 198);
+  ctx.bezierCurveTo(360, 106, 840, 106, 1110, 198);
   ctx.stroke();
   ctx.restore();
 }
@@ -109,34 +111,37 @@ export function drawCard(canvas: HTMLCanvasElement, spec: CardImageSpec): void {
 
   // 見出し
   ctx.fillStyle = MUTED;
-  ctx.font = `500 30px ${FONT_STACK}`;
-  ctx.fillText(spec.eyebrow, WIDTH / 2, 200);
+  ctx.font = `400 30px ${FONT_STACK}`;
+  ctx.fillText(spec.eyebrow, WIDTH / 2, 262);
 
   // 主役
   ctx.fillStyle = INK;
-  ctx.font = `700 122px ${FONT_STACK}`;
-  ctx.fillText(spec.headline, WIDTH / 2, 400);
+  ctx.font = `700 118px ${FONT_STACK}`;
+  ctx.fillText(spec.headline, WIDTH / 2, 392);
 
   // 補足
   ctx.fillStyle = accentColor;
-  ctx.font = `500 32px ${FONT_STACK}`;
-  ctx.fillText(spec.subline, WIDTH / 2, 462);
+  ctx.font = `700 32px ${FONT_STACK}`;
+  ctx.fillText(spec.subline, WIDTH / 2, 452);
 
   // 脚注
   ctx.fillStyle = MUTED;
   ctx.font = `400 24px ${FONT_STACK}`;
-  ctx.fillText(spec.footnote, WIDTH / 2, 520);
+  ctx.fillText(spec.footnote, WIDTH / 2, 510);
 
   // 署名
-  ctx.fillStyle = INK;
-  ctx.font = `600 28px ${FONT_STACK}`;
-  ctx.fillText('つつみ帖', WIDTH / 2, 578);
-  ctx.strokeStyle = accentColor;
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(WIDTH / 2 - 96, 592);
-  ctx.lineTo(WIDTH / 2 + 96, 592);
-  ctx.stroke();
+  const signature = spec.signature ?? 'つつみ帖';
+  if (signature) {
+    ctx.fillStyle = INK;
+    ctx.font = `700 28px ${FONT_STACK}`;
+    ctx.fillText(signature, WIDTH / 2, 572);
+    ctx.strokeStyle = accentColor;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(WIDTH / 2 - 92, 586);
+    ctx.lineTo(WIDTH / 2 + 92, 586);
+    ctx.stroke();
+  }
 }
 
 /** 画像を PNG として保存させる。 */

@@ -103,7 +103,7 @@ export default function HomePage() {
           </span>
         </a>
 
-        <a className="entry entry--condolence rise rise--2" href="#/quiz">
+        <a className="entry entry--gold rise rise--2" href="#/quiz">
           <span className="entry__figure" aria-hidden>
             <MizuhikiKnot size={150} />
           </span>
@@ -137,14 +137,7 @@ export default function HomePage() {
       </section>
 
       <section className="history">
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'baseline',
-            justifyContent: 'space-between',
-            gap: 12
-          }}
-        >
+        <div className="history__head">
           <h2 className="section-title">最近調べた条件</h2>
           {history.length > 0 ? (
             <button
@@ -189,16 +182,16 @@ export default function HomePage() {
         )}
       </section>
 
-      <div style={{ marginTop: 44, opacity: 0.6 }}>
+      <div style={{ marginTop: 44 }}>
         <MizuhikiRule />
       </div>
 
-      <section style={{ marginTop: 28, textAlign: 'center' }}>
-        <p className="lead" style={{ maxWidth: '38em', margin: '0 auto' }}>
+      <section className="closing">
+        <p className="lead">
           金額は全国の一般的な目安です。地域・家・宗派によって作法は変わります。
           迷ったときは、同じ立場で参列する人と足並みをそろえるのがいちばん確実です。
         </p>
-        <a className="btn btn--ghost btn--sm" href="#/guide" style={{ marginTop: 16 }}>
+        <a className="btn btn--ghost btn--sm" href="#/guide">
           全場面の早見表を見る
         </a>
       </section>

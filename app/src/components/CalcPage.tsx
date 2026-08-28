@@ -34,6 +34,15 @@ export default function CalcPage({ initial, onSubmit }: CalcPageProps) {
   const [step, setStep] = useState(() => (initial.occasion ? (initial.relation ? 2 : 1) : 0));
   const [error, setError] = useState<string | null>(null);
   const headingRef = useRef<HTMLLegendElement>(null);
+  const advanceTimer = useRef<number | undefined>(undefined);
+
+  // 選択の手応えを見せてから次の手順へ送る
+  const advanceAfter = (nextStep: number) => {
+    window.clearTimeout(advanceTimer.current);
+    advanceTimer.current = window.setTimeout(() => setStep(nextStep), 280);
+  };
+
+  useEffect(() => () => window.clearTimeout(advanceTimer.current), []);
 
   const currentOccasion = occasion ? OCCASION_MAP[occasion] : undefined;
   const relationOptions = useMemo(
@@ -86,6 +95,7 @@ export default function CalcPage({ initial, onSubmit }: CalcPageProps) {
   };
 
   const goBack = () => {
+    window.clearTimeout(advanceTimer.current);
     setError(null);
     setStep((s) => Math.max(0, s - 1));
   };
@@ -100,9 +110,19 @@ export default function CalcPage({ initial, onSubmit }: CalcPageProps) {
             }`}
             key={name}
           >
-            <span className="step__dot" aria-hidden>
+            <button
+              type="button"
+              className="step__dot"
+              disabled={index >= step}
+              aria-label={`手順${index + 1}「${name}」に戻る`}
+              onClick={() => {
+                window.clearTimeout(advanceTimer.current);
+                setError(null);
+                setStep(index);
+              }}
+            >
               {index < step ? <IconCheck size={13} /> : index + 1}
-            </span>
+            </button>
             <span className="step__name">{name}</span>
             {index < STEP_NAMES.length - 1 ? <span className="step__bar" /> : null}
           </div>
@@ -129,7 +149,7 @@ export default function CalcPage({ initial, onSubmit }: CalcPageProps) {
               どんな場面ですか
             </legend>
             <p className="field-help">
-              お祝いかお悔やみかで、金額の考え方も袋の選び方も変わります。
+              お祝いかお悔やみかで、金額の考え方も袋の選び方も変わります。選ぶと次へ進みます。
             </p>
             <div className="option-grid">
               {OCCASIONS.map((item) => (
@@ -141,6 +161,7 @@ export default function CalcPage({ initial, onSubmit }: CalcPageProps) {
                   onClick={() => {
                     setOccasion(item.id);
                     setError(null);
+                    advanceAfter(1);
                   }}
                 >
                   <span className="option__icon">
@@ -177,6 +198,7 @@ export default function CalcPage({ initial, onSubmit }: CalcPageProps) {
                   onClick={() => {
                     setRelation(item.id);
                     setError(null);
+                    advanceAfter(2);
                   }}
                 >
                   <span className="option__body">

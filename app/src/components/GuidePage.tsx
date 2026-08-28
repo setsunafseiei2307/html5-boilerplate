@@ -121,7 +121,7 @@ export default function GuidePage() {
         </ol>
       </section>
 
-      <div style={{ marginTop: 30, opacity: 0.6 }}>
+      <div style={{ marginTop: 30 }}>
         <MizuhikiRule />
       </div>
 

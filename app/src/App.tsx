@@ -134,6 +134,9 @@ export default function App() {
   const showToast = useCallback((message: string) => setToast(message), []);
   const isDark = resolveTheme(preference) === 'dark';
 
+  // 画面が切り替わるたびに要素を作り直し、立ち上がりのアニメーションを走らせる
+  const viewKey = pending ? 'pending' : `${route.name}:${window.location.hash}`;
+
   const currentNav =
     route.name === 'quiz' || route.name === 'quizResult'
       ? 'quiz'
@@ -188,7 +191,7 @@ export default function App() {
       </header>
 
       <main className="main">
-        <div className="shell">
+        <div className="shell view" key={viewKey}>
           {pending ? (
             <Loading label="包みをととのえています" />
           ) : route.name === 'home' ? (

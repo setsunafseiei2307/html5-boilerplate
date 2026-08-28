@@ -1,0 +1,68 @@
+name: つつみ帖 を GitHub Pages へ公開
+
+on:
+  push:
+    branches:
+      - main
+      - claude/revenue-webapp-autonomous-vxroiy
+    paths:
+      - 'app/**'
+      - '.github/workflows/deploy-tsutsumicho.yml'
+  workflow_dispatch:
+
+# Pages への書き込みに必要な最小の権限だけを与える
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同時に走らせない。実行中のデプロイは中断せず、後続を待たせる
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: テストとビルド
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: 依存を入れる
+        run: npm ci
+
+      - name: ユニットテスト
+        run: npm test
+
+      - name: 型チェックとビルド
+        # GitHub Pages はリポジトリ名配下に配信されるため base を合わせる
+        run: npm run build
+        env:
+          DEPLOY_BASE: /${{ github.event.repository.name }}/
+
+      - name: 単一ページアプリのフォールバックを置く
+        run: cp dist/index.html dist/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: app/dist
+
+  deploy:
+    name: 公開
+    needs: test
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
