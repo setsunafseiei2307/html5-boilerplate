@@ -8,15 +8,15 @@
 
 **https://setsunafseiei2307.github.io/html5-boilerplate/**
 
-上のリンクをブラウザで開くと、アプリがそのまま動きます。GitHub Pages で公開されており、
-サーバーもログインも不要です。
+上のリンクをブラウザで開くだけで、アプリがそのまま動きます。GitHub Pages で公開しているため、
+自分でサーバーを用意する必要も、ログインする必要もありません。
 
 表示されない場合は、次を確認してください。
 
-* このリポジトリが **Private** の場合、GitHub Pages のURLは第三者には見えません
-  （Settings → General → Danger Zone → Change repository visibility から Public に変更できます）。
-* `Settings → Pages` で Source が `GitHub Actions` になっているか
-* `Actions` タブの `つつみ帖 を GitHub Pages へ公開` ワークフローが緑色（成功）になっているか
+* このリポジトリが **Private** の場合、GitHub Pages のURLは第三者からは見えません。
+  公開するには `Settings → General → Danger Zone → Change repository visibility` から Public に変更してください。
+* `Settings → Pages` で Source が `GitHub Actions` になっているか確認してください。
+* `Actions` タブの `つつみ帖 を GitHub Pages へ公開` ワークフローが緑色（成功）になっているか確認してください。
 
 ## このリポジトリについて
 
@@ -28,8 +28,8 @@
 app/    ← つつみ帖 本体（React + TypeScript + Vite）
 ```
 
-ルート直下に残っている `gulpfile.mjs` や `dist/` などは元テンプレートの名残で、
-つつみ帖の動作には使用していません。
+ルート直下に残っている `gulpfile.mjs` や `dist/` などは元テンプレートの名残であり、
+つつみ帖の動作には使っていません。削除しても影響はありませんが、現状はそのまま残しています。
 
 ## ライセンス
 
