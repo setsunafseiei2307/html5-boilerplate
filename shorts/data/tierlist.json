@@ -1,0 +1,28 @@
+{
+  "title": "肩トレ種目 ガチでランク付けします",
+  "headerTitle": "肩トレ種目ティア表",
+  "outro": "あなたの1位は？\nコメントで教えて",
+  "bgm": "bgm.mp3",
+  "bgmVolume": 0.3,
+  "introSec": 2,
+  "cardIntervalSec": 3.5,
+  "outroSec": 3,
+  "partLabels": { "front": "前部", "side": "中部", "rear": "後部" },
+  "partColors": { "front": "#ff9f1c", "side": "#2ec4f1", "rear": "#b57cff" },
+  "tiers": [
+    { "id": "S", "color": "#ff4d6d" },
+    { "id": "A", "color": "#ff9f1c" },
+    { "id": "B", "color": "#ffd93d" },
+    { "id": "C", "color": "#6bcB77" }
+  ],
+  "items": [
+    { "name": "フロントレイズ", "tier": "C", "parts": ["front"] },
+    { "name": "サイドレイズ", "tier": "S", "parts": ["side"] },
+    { "name": "アップライトロウ", "tier": "B", "parts": ["side", "front"] },
+    { "name": "リアデルトフライ", "tier": "A", "parts": ["rear"] },
+    { "name": "ショルダープレス（バーベル）", "tier": "B", "parts": ["front", "side"] },
+    { "name": "フェイスプル", "tier": "A", "parts": ["rear"] },
+    { "name": "ショルダープレス（ダンベル）", "tier": "A", "parts": ["front", "side"] },
+    { "name": "ケーブルサイドレイズ", "tier": "S", "parts": ["side"] }
+  ]
+}
